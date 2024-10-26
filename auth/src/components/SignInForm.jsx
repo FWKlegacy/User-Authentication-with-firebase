@@ -13,6 +13,8 @@ function SignInForm() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       console.log("Account Created");
+      setEmail("");
+      setPassword("");
     } catch (err) {
       console.log("user,not created", err);
     }
@@ -43,7 +45,7 @@ function SignInForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter Password"
-          autoComplete="password"
+          autoComplete="new-password"
           required
         />
       </label>
