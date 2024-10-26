@@ -1,6 +1,6 @@
 import React from "react";
-import LogInForm from "./components/LogInForm";
-import SignInForm from "./components/SignInForm";
+import LogInForm from "./components/logInForm";
+import SignInForm from "./components/signInForm";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
