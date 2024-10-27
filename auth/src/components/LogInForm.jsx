@@ -9,17 +9,30 @@ function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
+
       setEmail("");
       setPassword("");
-      console.log("Login successful");
-    } catch (err) {
-      console.log("Login unsuccessful", err);
+    } catch (error) {
+      // Firebase returns errors by code; use these to provide helpful feedback
+      switch (error.code) {
+        case "auth/user-not-found":
+          setError("No user found with this email.");
+          break;
+        case "auth/wrong-password":
+          setError("Incorrect password. Please try again.");
+          break;
+        case "auth/invalid-email":
+          setError("Invalid email format.");
+          break;
+        default:
+          setError("Login failed. Invalid Credentials.");
+      }
     }
   };
 
@@ -35,6 +48,7 @@ function SignInForm() {
   return (
     <form className="container" onSubmit={handleSubmit}>
       <h2>LogIn</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <label htmlFor="email">
         Email :
         <input
