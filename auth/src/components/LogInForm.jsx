@@ -1,24 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./SignInForm.css";
 import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      console.log("login successful");
+      navigate("/");
       setEmail("");
       setPassword("");
+      console.log("Login successful");
     } catch (err) {
       console.log("Login unsuccessful", err);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/");
+      }
+      return () => unsubscribe();
+    });
+  }, [navigate]);
 
   return (
     <form className="container" onSubmit={handleSubmit}>
